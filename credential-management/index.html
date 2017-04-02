@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Credential Management API</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css">
+</head>
+<body class="ui container segment">
+	<h1>Credential Management API</h1>
+	<form class="ui form" action="login">
+		<div class="field">
+			<label>Login:</label>
+			<input name="login">
+		</div>
+		<div class="field">
+			<label>Password:</label>
+			<input type="password" name="password">
+		</div>
+		<input type="submit" class="ui button" value="Sign in">
+	</form>
+	<script>
+	(function() {
+		if("credentials" in navigator) {
+			navigator.credentials.get({
+				password: true
+			}).then(cred => {
+				if (cred) {
+					fetch("login", {
+						method: "POST",
+						credentials: cred
+					});
+				}
+			});
+		}
+	})();
+	</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Credential Management API</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css">
+</head>
+<body class="ui container segment">
+	<h1>Credential Management API</h1>
+	<div class="ui positive message">
+		<p class="header">Login successful</p>
+		<ul class="list">
+			<li>Login: <span id="login"></span></li>
+			<li>Password: <span id="password"></span></li>
+		</ul>
+	</div>
+	<script>
+	(function() {
+		var getParameterByName = function(name) {
+			var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+			return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+		}
+		document.getElementById('login').textContent = getParameterByName('login');
+		document.getElementById('password').textContent = getParameterByName('password');
+	})();
+	</script>
+</body>
+</html>
