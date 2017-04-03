@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Payment request API</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css">
+</head>
+<body class="ui container segment">
+	<h1>Payment request API</h1>
+	<script>
+	(function() {
+		if("webkitSpeechRecognition" in window) {
+			var details = {
+			displayItems: [
+				{
+					label: "book",
+					amount: { currency: "USD", value: "25.00" }
+				},
+				{
+					label: "free shipping - 5 days",
+					amount: { currency: "USD", value: "0.00"},
+					pending: true
+				}
+			],
+			shippingOptions: [
+				{
+					id: 'FREE',
+					label: 'free shipping - 5 days',
+					amount: {currency: 'USD', value: '0.00'},
+					selected: true
+				},
+				{
+					id: 'FAST',
+					label: 'shipping - 2 days',
+					amount: {currency: 'USD', value: '5.00'}
+				}
+			],
+			total: {
+				label: "Total",
+				amount: { currency: "USD", value: "25.00" }
+			}
+		};
+
+		var paymentRequest = new PaymentRequest([{
+			supportedMethods: ["basic-card"],
+			data: {
+				supportedNetworks: [ 'visa', 'mastercard' ]
+			}
+		}], details, {
+			requestShipping: true
+		});
+
+		paymentRequest.addEventListener("shippingoptionchange", e => {
+			if (e.target.shippingOption === 'FAST') {
+				details.displayItems = [
+					{
+						label: "book",
+						amount: { currency: "USD", value: "25.00" }
+					},
+					{
+						label: "shipping - 2 days",
+						amount: { currency: "USD", value: "5.00"},
+						pending: true
+					}
+				];
+				details.total = {
+					label: "Total",
+					amount: { currency: "USD", value: "30.00" }
+				}
+				details.shippingOptions = [
+					{
+						id: 'FREE',
+						label: 'free shipping - 5 days',
+						amount: {currency: 'USD', value: '0.00'},
+					},
+					{
+						id: 'FAST',
+						label: 'shipping - 2 days',
+						amount: {currency: 'USD', value: '5.00'},
+						selected: true
+					}
+				];
+			} else if  (e.target.shippingOption === 'FREE') {
+				details.displayItems = [
+					{
+						label: "book",
+						amount: { currency: "USD", value: "25.00" }
+					},
+					{
+						label: "free shipping - 5 days",
+						amount: { currency: "USD", value: "0.00"},
+						pending: true
+					}
+				];
+				details.total = {
+					label: "Total",
+					amount: { currency: "USD", value: "35.00" }
+				};
+				details.shippingOptions = [
+					{
+						id: 'FREE',
+						label: 'free shipping - 5 dias',
+						amount: {currency: 'USD', value: '0.00'},
+						selected: true
+					},
+					{
+						id: 'FAST',
+						label: 'shipping - 2 dias',
+						amount: {currency: 'USD', value: '5.00'}
+					}
+				];
+			}
+			e.updateWith(((details) => {
+				return Promise.resolve(details);
+			})(details));
+		});
+
+
+		paymentRequest.show().then(paymentResponse => {
+			setTimeout(function() {
+				paymentResponse.complete("success");
+			}, 1000);
+		});
+		}
+	})();
+	</script>
+</body>
+</html>
