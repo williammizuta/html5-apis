@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Speech API</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css">
+</head>
+<body class="ui container segment">
+	<h1>Speech API</h1>
+	<form class="ui form">
+		<div class="field">
+			<label>Product:</label>
+			<input>
+		</div>
+		<div class="field">
+			<label>Price:</label>
+			<input>
+		</div>
+		<div class="field">
+			<label>Category:</label>
+			<input>
+		</div>
+		<div class="field">
+			<label>Production time:</label>
+			<input>
+		</div>
+	</form>
+	<script>
+	(function() {
+		if("webkitSpeechRecognition" in window) {
+			let target;
+
+			const speechRecognition = new webkitSpeechRecognition();
+			speechRecognition.maxAlternatives = 1;
+			speechRecognition.interimResults = false;
+			speechRecognition.lang = 'en';
+			speechRecognition.onresult = function(event) {
+				target.value = event.results[0][0].transcript;
+			};
+
+			var inputs = document.getElementsByTagName('input');
+			for(var i = 0; i < inputs.length; i++) {
+				var input = inputs[i]
+
+				input.addEventListener('focus', function() {
+					var utter = new SpeechSynthesisUtterance(this.previousElementSibling.textContent);
+					utter.lang = 'en';
+					speechSynthesis.speak(utter);
+
+					target = this;
+					speechRecognition.start();
+				});
+			}
+		}
+	})();
+	</script>
+</body>
+</html>
